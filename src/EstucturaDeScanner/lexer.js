@@ -27,37 +27,41 @@ export class Lexer{
         while(this.posicionActualEnLaET<this.entradaDeTexto.length){
 
             //Recorro caracter por caracter
-            let charActual=this.entradaDeTexto[this.posicionActualEnLaET];
+            const charActual=this.entradaDeTexto[this.posicionActualEnLaET];
 
             if(this.estadoActualDelAutomata==="INICIAL"){
 
-                if(charActual===" "||charActual==="\t"){ //Ignoramos espacios y tabulaciones
+                if(charActual===" "||charActual==="\t"|| charActual==="\r"){ //Ignoramos espacios,tabs y retornos al inicio de la linea
 
                     //A pesar que las ignoramos, debemos avanzar de posicion
                     this.avanzarDePosicion();
                     continue; //Se sigue iterando no puedo parar
                 }
-
+                //salto de linea
                 if(charActual==="\n"){
                     this.filaEnLaET++; //Un salto de linea aumenta la fila
                     this.columanaEnLaET=1; //Y la columna se reinicia
                     this.posicionActualEnLaET++; //Avanzo de posicion en la entrada de texto
                     continue; //Se sigue iterando no puedo parar
                 }
-
+                // Letra -> IDENT (inicializa buffer con el primer char y AVANZA)
                 if(this.esLetraELCaracter(charActual)){
                     this.estadoActualDelAutomata="IDENT" //cambia el estado a IDENT
-                    this.buffer=""; // teorimacembnte el buffer me permite almacenar los caracteres
+                    this.buffer=charActual; // teorimacembnte el buffer me permite almacenar los caracteres
                     this.columaDeInicio=this.columanaEnLaET //guardo la columna de inicio 
+                    this.avanzarDePosicion();
+                    continue;
                 }    
                 
+                //Digito->num
                 if(this.esDigitoElCaracter(charActual)){
                     this.estadoActualDelAutomata="NUM"; //cambiamos el estado a numero
-                    this.buffer="";
+                    this.buffer="charActual";
                     this.columanaDeInicio=this.columanaEnLaET;
+                    this.avanzarDePosicion();
                     continue;
                 }
-
+                // Comilla -> CADENA (no guardo la comilla en el buffer)
                 if(charActual==='"'){ // o sea si encontramos una comilla significa que se viene un string
 
                     this.estadoActualDelAutomata="CADENA";
@@ -68,90 +72,148 @@ export class Lexer{
 
                 }
 
-                if(Object.keys(TIPOS_DE_SIMBOLOS).includes(charActual)){ //Estoy accediendo al diccionario de la clase de token y compara si char coincide con  alguna de sud llaves
+                //esto es para anlizar los simbolos {},[]-;-:
+                const tipoSimbolo=this.esTipoDeSimbolo(charActual);
+                if(tipoSimbolo!=null){
 
-                    this.listaDeTokensEncontrados.push(new Token(charActual, //El char en si es el lexema
-                        TIPOS_DE_SIMBOLOS[charActual], //El tipo es la frase asosiada al llave del diccionario
+                    this.listaDeTokensEncontrados.push(new Token(
+                        charActual, //Lexema
+                        tipoSimbolo, //tipo
                         this.filaEnLaET,
-                        this.columanaEnLaET));
-                    
+                        this.columanaEnLaET
+                    ));
                     this.avanzarDePosicion();
                     continue;
                 }
-                
-                //Si nada pasa ese filtro entonces es invalido el token
 
-                this.agregarError(charActual, "Token Invalido", "Este lexer no es capaz de enconntrar estos caracteres");
+                //Ya puse todos los posibles inicios del automata, sillego hasta aca es porque existe un erorr:
+
+                this.agregarError(charActual,"Token invalido","Este lexer no reconoce este caracter");
                 this.avanzarDePosicion();
+                continue;
             }
-            //Guardar el identificador:
-            else if(this.estadoActualDelAutomata==="IDENT"){
-                if(this.esLetraELCaracter(this.entradaDeTexto[this.posicionActualEnLaET])){
+
+            //======Estado IDENT========:
+            if(this.estadoActualDelAutomata==="IDENT"){
+                if(this.posicionActualEnLaET<this.entradaDeTexto.length 
+                    && this.esLetraELCaracter(this.entradaDeTexto[this.posicionActualEnLaET])){
                     this.buffer+=this.entradaDeTexto[this.posicionActualEnLaET];//Es decir el budder recibe el caracter actual, asi retroalimentandose
                     this.avanzarDePosicion();
 
                 } else{
 
-                    this.agregarTokenIdent(this.buffer, this.columaDeInicio) //esto es porque necesitamos clasificar el token
+                    //vamos a clasificar el lexema, es decir el buffer está listo para cargar un token
+
+                    //le paso un posible lexema y a donde deberia pertenecer
+                    if(this.estaEnLista(this.buffer,PALABRAS_RESERVADAS)){
+
+                        this.listaDeTokensEncontrados.puhs(new Token(
+                            this.buffer,
+                            "Palabra Reservada",
+                            this.filaEnLaET,
+                            this.columanaDeInicio //a mi me interesa en donde comienza esta palabra reservada
+                        ));                    
+                    }
+                    else if(this.estaEnLista(this.buffer, ATRIBUTOS_VALIDOS)){
+
+                        this.listaDeTokensEncontrados.push(
+                            new Token(
+                                this.buffer,
+                                "Atributo valido",
+                                this.filaEnLaET,
+                                this.columaDeInicio
+                            )
+                        );
+                    }
+                    //si no es ni una, entonces cae en un error
+                    else{
+                        this.agregarError(this.buffer,"Token no valido","Identificador No permitido", this.columaDeInicio);
+                    }
+                    //si se capto un identifaco, vuelvo al estado iniclal para seguir reconociendo                    
                     this.estadoActualDelAutomata="INICIAL" //vuelvo para reconocer otros estados
 
                 }
-
-
+                continue;
             }
-            else if(this.estadoActualDelAutomata==="NUM"){
-                if(this.esDigitoElCaracter(this.entradaDeTexto[this.posicionActualEnLaET])){
+
+            //Estado para NUM
+            if(this.estadoActualDelAutomata==="NUM"){
+                if(this.posicionActualEnLaET< this.entradaDeTexto.length 
+                    && this.esDigitoElCaracter(this.entradaDeTexto[this.posicionActualEnLaET])){
                     this.buffer+=this.entradaDeTexto[this.posicionActualEnLaET];
                     this.avanzarDePosicion();
                     
                 }else{
-
-                    this.listaDeErroresEncontrados.push(new Token(this.buffer,"Número",this.filaEnLaET, this.columanaEnLaET));
-                    this.estadoActualDelAutomata="INICIAL"
+                    //Al comppletar el buffer con un patron asociado a un token numero
+                    this.listaDeTokensEncontrados.push(
+                        new Token(
+                            this.buffer,
+                            "Número",
+                            this.filaEnLaET,
+                            this.columanaDeInicio));
+                    this.estadoActualDelAutomata="INICIAL";
 
                 }
+                continue;
             }
 
-            else if(this.estadoActualDelAutomata==="CADENA"){
-                if(this.entradaDeTexto[this.posicionActualEnLaET]==='"'){//Es decir encontre la comilla de cierre
-                    this.listaDeTokensEncontrados.push(new Token(this.buffer,"Cadena",this.filaEnLaET,this.columanaDeInicio));
-                    this.avanzarDePosicion();
-                    this.estadoActualDelAutomata="INICIAL";
-                } else if(this.posicionActualEnLaET>=this.entradaDeTexto.length){ //Si pasa esto es porque no existe una comilla de ciere
-                    this.agregarError(this.buffer,"Token invalido","No existe una comilla de cierre");
-                    this.estadoActualDelAutomata="INICIAL";
+            if(this.estadoActualDelAutomata==="CADENA"){
+                
+                //No se encontro una comilla de cierre:
+                if(this.posicionActualEnLaET>=this.entradaDeTexto){
 
-                } else{
+                    this.agregarError(this.buffer,
+                        "Token invalido", 
+                        "No existe comilla de cierre",this.columaDeInicio);
 
-                    this.buffer+=this.entradaDeTexto[this.posicionActualEnLaET]; //voy caoncatedando las letrad que formna la cadena va vos 
-                    this.avanzarDePosicion();
+                    this.estadoActualDelAutomata="INICIAL";
+                    continue;
                 }
 
+                //si lo anterior no pasa es porque seguimos almacenando en el buffer
 
+                if(charActual==='"'){
+
+                    const tipoDeCadena=this.esMarcadorCadena(this.buffer)? "Marcador":"Cadena"; //la funcion anterior me da un true o false, si es t->Marcador, si es f->Cadena
+                    this.listaDeTokensEncontrados(new Token(
+
+                        this.buffer, //lexema
+                        tipoDeCadena, //tipo
+                        this.filaEnLaET,
+                        this.columaDeInicio
+                        )
+                    )
+                    this.avanzarDePosicion();
+                    this.estadoActualDelAutomata="INICIAL" //si se cierra una cadena, el token esta terminado, entonces volvemos al principio
+                    continue;
+                }
+
+                //soportar saltos de linea en las cadenas
+
+                if(charActual==="\n"){
+                    this.filaEnLaET++;
+                    this.columanaEnLaET=1;
+                    this.buffer="\n"
+                    this.posicionActualEnLaET++;
+                    continue
+
+                }
+
+                //en caso que no haya cierre, concatenamos lo nuevo captado por el buffer
+
+                this.buffer+=charActual;
+                this.avanzarDePosicion();
+                continue;
             }
         }
 
-        return {tokens:this.listaDeTokensEncontrados, errores:this.listaDeErroresEncontrados};
+        return {tokens:this.listaDeTokensEncontrados, 
+            errores:this.listaDeErroresEncontrados};
     }
 
-    agregarTokenIdent(lexema,columnaInicio){
+    
 
-        if(PALABRAS_RESERVADAS.includes(lexema)){
-
-            this.listaDeTokensEncontrados.push(new Token(lexema,"Palabra Reservada",this.filaEnLaET,columnaInicio));
-        
-        }else if(ATRIBUTOS_VALIDOS.includes(lexema)){
-
-            this.listaDeTokensEncontrados.push(new Token(lexema,"Atributo valido",this.filaEnLaET,columnaInicio));
-
-        } else{
-
-            this.agregarError(lexema,"Token no valido","Identificador no permmitido",columnaInicio);
-        }
-
-
-    }
-
+    //Enlita errores en la tabla de errores
     agregarError(lexema,tipo,descripcion, col=this.columanaEnLaET){
 
         this.listaDeErroresEncontrados.push({
