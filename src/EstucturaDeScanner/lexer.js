@@ -6,7 +6,7 @@ export class Lexer{
         this.entradaDeTexto=entradaDeTexto; //entradaDeeTexto=ET
         this.posicionActualEnLaET=0;
         this.filaEnLaET=1;
-        this.columanaEnLaET=1;
+        this.columnaEnLaET=1;
 
         this.listaDeTokensEncontrados=[];
         this.listaDeErroresEncontrados=[];
@@ -18,7 +18,7 @@ export class Lexer{
         */ 
         this.estadoActualDelAutomata="INICIAL";
         this.buffer="";
-        this.columaDeInicio=1;
+        this.columnaDeInicio=1;
     }    
 
     //Análisis lexico
@@ -40,7 +40,7 @@ export class Lexer{
                 //salto de linea
                 if(charActual==="\n"){
                     this.filaEnLaET++; //Un salto de linea aumenta la fila
-                    this.columanaEnLaET=1; //Y la columna se reinicia
+                    this.columnaEnLaET=1; //Y la columna se reinicia
                     this.posicionActualEnLaET++; //Avanzo de posicion en la entrada de texto
                     continue; //Se sigue iterando no puedo parar
                 }
@@ -48,7 +48,7 @@ export class Lexer{
                 if(this.esLetraELCaracter(charActual)){
                     this.estadoActualDelAutomata="IDENT" //cambia el estado a IDENT
                     this.buffer=charActual; // teorimacembnte el buffer me permite almacenar los caracteres
-                    this.columaDeInicio=this.columanaEnLaET //guardo la columna de inicio 
+                    this.columnaDeInicio=this.columnaEnLaET //guardo la columna de inicio
                     this.avanzarDePosicion();
                     continue;
                 }    
@@ -56,8 +56,8 @@ export class Lexer{
                 //Digito->num
                 if(this.esDigitoElCaracter(charActual)){
                     this.estadoActualDelAutomata="NUM"; //cambiamos el estado a numero
-                    this.buffer="charActual";
-                    this.columanaDeInicio=this.columanaEnLaET;
+                    this.buffer=charActual;
+                    this.columnaDeInicio=this.columnaEnLaET;
                     this.avanzarDePosicion();
                     continue;
                 }
@@ -66,7 +66,7 @@ export class Lexer{
 
                     this.estadoActualDelAutomata="CADENA";
                     this.buffer=""; //aca se va a almcenar la cadena
-                    this.columaDeInicio=this.columanaEnLaET;
+                    this.columnaDeInicio=this.columnaEnLaET;
                     this.avanzarDePosicion(); //No quiero guardar la comilla inicial
                     continue;
 
@@ -80,7 +80,7 @@ export class Lexer{
                         charActual, //Lexema
                         tipoSimbolo, //tipo
                         this.filaEnLaET,
-                        this.columanaEnLaET
+                        this.columnaEnLaET
                     ));
                     this.avanzarDePosicion();
                     continue;
@@ -107,11 +107,11 @@ export class Lexer{
                     //le paso un posible lexema y a donde deberia pertenecer
                     if(this.estaEnLista(this.buffer,PALABRAS_RESERVADAS)){
 
-                        this.listaDeTokensEncontrados.puhs(new Token(
+                        this.listaDeTokensEncontrados.push(new Token(
                             this.buffer,
                             "Palabra Reservada",
                             this.filaEnLaET,
-                            this.columanaDeInicio //a mi me interesa en donde comienza esta palabra reservada
+                            this.columnaDeInicio //a mi me interesa en donde comienza esta palabra reservada
                         ));                    
                     }
                     else if(this.estaEnLista(this.buffer, ATRIBUTOS_VALIDOS)){
@@ -121,13 +121,13 @@ export class Lexer{
                                 this.buffer,
                                 "Atributo valido",
                                 this.filaEnLaET,
-                                this.columaDeInicio
+                                this.columnaDeInicio
                             )
                         );
                     }
                     //si no es ni una, entonces cae en un error
                     else{
-                        this.agregarError(this.buffer,"Token no valido","Identificador No permitido", this.columaDeInicio);
+                        this.agregarError(this.buffer,"Token no valido","Identificador No permitido", this.columnaDeInicio);
                     }
                     //si se capto un identifaco, vuelvo al estado iniclal para seguir reconociendo                    
                     this.estadoActualDelAutomata="INICIAL" //vuelvo para reconocer otros estados
@@ -150,7 +150,7 @@ export class Lexer{
                             this.buffer,
                             "Número",
                             this.filaEnLaET,
-                            this.columanaDeInicio));
+                            this.columnaDeInicio));
                     this.estadoActualDelAutomata="INICIAL";
 
                 }
@@ -160,11 +160,11 @@ export class Lexer{
             if(this.estadoActualDelAutomata==="CADENA"){
                 
                 //No se encontro una comilla de cierre:
-                if(this.posicionActualEnLaET>=this.entradaDeTexto){
+                if(this.posicionActualEnLaET>=this.entradaDeTexto.length){
 
                     this.agregarError(this.buffer,
                         "Token invalido", 
-                        "No existe comilla de cierre",this.columaDeInicio);
+                        "No existe comilla de cierre",this.columnaDeInicio);
 
                     this.estadoActualDelAutomata="INICIAL";
                     continue;
@@ -175,12 +175,12 @@ export class Lexer{
                 if(charActual==='"'){
 
                     const tipoDeCadena=this.esMarcadorCadena(this.buffer)? "Marcador":"Cadena"; //la funcion anterior me da un true o false, si es t->Marcador, si es f->Cadena
-                    this.listaDeTokensEncontrados(new Token(
+                    this.listaDeTokensEncontrados.push(new Token(
 
                         this.buffer, //lexema
                         tipoDeCadena, //tipo
                         this.filaEnLaET,
-                        this.columaDeInicio
+                        this.columnaDeInicio
                         )
                     )
                     this.avanzarDePosicion();
@@ -192,8 +192,8 @@ export class Lexer{
 
                 if(charActual==="\n"){
                     this.filaEnLaET++;
-                    this.columanaEnLaET=1;
-                    this.buffer="\n"
+                    this.columnaEnLaET=1;
+                    this.buffer+="\n"
                     this.posicionActualEnLaET++;
                     continue
 
@@ -214,7 +214,7 @@ export class Lexer{
     
 
     //Enlita errores en la tabla de errores
-    agregarError(lexema,tipo,descripcion, col=this.columanaEnLaET){
+    agregarError(lexema,tipo,descripcion, col=this.columnaEnLaET){
 
         this.listaDeErroresEncontrados.push({
             error:lexema,
@@ -279,12 +279,12 @@ export class Lexer{
         pos+=1;
 
         while(pos<marcador.length && this.esDigitoElCaracter(marcador[pos])){tieneDere=true;pos++}
-        return tieneDere && pos===marc.length; //Significa que se cumple el formato y se recorrio toda la cadena
+        return tieneDere && pos===marcador.length; //Significa que se cumple el formato y se recorrio toda la cadena
     }
     //Avamzar es simplemente cambiar posicion y columna por concecuente
     avanzarDePosicion(){
         this.posicionActualEnLaET++;
-        this.columanaEnLaET++;
+        this.columnaEnLaET++;
     }
 
 }
