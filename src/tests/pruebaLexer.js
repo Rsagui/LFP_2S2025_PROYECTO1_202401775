@@ -1,4 +1,5 @@
 import { Lexer } from "../EstucturaDeScanner/lexer.js";
+import { readFileSync } from "fs";
 
 
 const entrada = `TORNEO {
