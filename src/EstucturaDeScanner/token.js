@@ -1,11 +1,11 @@
 //Conjunto base que para pertenecer se deben cumplir una serie de filtros
-class Token{
+export class Token{
     constructor(lexema,tipo,fila,columna){
 
         this.lexema=lexema;
         this.tipo=tipo;
         this.fila=fila;
-        this.columna;
+        this.columna=columna;
     }
 }
 
@@ -24,8 +24,13 @@ export const PALABRAS_RESERVADAS=[
     "jugador",
     "resultado",
     "partido",
-    "resultado",
-    "goleador"
+    "goleador",
+    "cuartos",
+    "semifinal",
+    "final",
+    "vs",
+    "goleadores",
+    "minuto"
 ];
 
 export const ATRIBUTOS_VALIDOS=[
@@ -35,11 +40,17 @@ export const ATRIBUTOS_VALIDOS=[
     "posicion",
     "numero",
     "edad",
-    "cuartos",
-    "semifinal",
-    "final",
-    "vs",
-    "goleadores",
-    "minuto"
+    
 ];
+
+export const TIPOS_DE_SIMBOLOS={
+    "{":"Llave izquierda",
+    "}":"Llave derecha",
+    "[": "Corchete Izquierdo",
+    "]":"Corchete Derecho",
+    ":": "Dos puntos",
+    ",": "Coma"
+
+
+}
 
