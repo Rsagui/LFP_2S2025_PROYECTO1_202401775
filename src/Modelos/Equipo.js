@@ -7,7 +7,7 @@ export class Equipo{
 
         //datos basicos de los equipos:
 
-        this.partidos=0;
+        this.cantPartidosJugados=0;
         this.victorias=0;
         this.derrotas=0;
         this.golesAFavor=0;
