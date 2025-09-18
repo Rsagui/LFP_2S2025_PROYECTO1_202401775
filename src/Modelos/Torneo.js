@@ -70,7 +70,7 @@ export class Torneo{
             const equipoGol=(infoGol.equipoDelJugador===equi1.nombreEquipo)? equi1: equi2;
 
             //Itero sobre la lista de jugadores del equipo hasta encontrar el nombre del jugador que conincida con el jugador que metio el gol de infoGol
-            const jugadorGol=equipo.jugadoresDelEquipo.find(j=>j.nombre===infoGol.jugadorNombre);
+            const jugadorGol=equipoGol.jugadoresDelEquipo.find(j=>j.nombre===infoGol.jugadorNombre);
 
             if(jugadorGol){
 
@@ -78,7 +78,19 @@ export class Torneo{
                 jugadorGol.minutosDeGol.push(infoGol.minutoGol);//los jugadoress tienen una lista, con cada minuto en donde han metido gol
             }
         }
+        //sin importar lo que pase, alguno de los equipos se queda  eliminado en esta fase
+        equi1.faseAlcanzadada=capitalizar(partido.fase);
+        equi2.faseAlcanzadada=capitalizar(partido.fase);
+
+        this.partidosDelTorneo.push(partido);
     }
-    
+}
+
+//la entradaa deben se ser cadenas que signifiquen una fase de eliminacion que llego algun equipo
+function capitalizar(cadenaDeFase){
+
+    //si tiene contenido dentro la cadena fase, tenemos 2 opciones
+    //1) separar la primer letra, volverla mayucula y concatenar con lo restante de la cadena y enviar la cadenaFase vacia
+    return cadenaDeFase? cadenaDeFase.charAt(0).toUpperCase()+cadenaDeFase.slice(1): cadenaDeFase;
 
 }

@@ -1,8 +1,8 @@
 {
-  "name": "estucturadescanner",
+  "name": "consumidor",
   "version": "1.0.0",
   "description": "",
-  "main": "lexer.js",
+  "main": "flujoDeTokens.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
