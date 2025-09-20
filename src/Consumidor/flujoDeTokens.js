@@ -30,7 +30,7 @@ export class TokenStream{
     //ver si ya terminamos:
     seraQueTerminamosLaLista(){return this.idx>=this.listaDeTokens.length;}
 
-    LexemaEsperado(lex){
+    lexemaEsperado(lex){
 
         const token=this.siguienteEnLaLista();//consumo pero devuelve el token actual en donde me encontraba 
         if(!token || token.lexema!==lex){ //atributo lexema de un token
@@ -41,11 +41,11 @@ export class TokenStream{
     }
 
     // es un atributo
-    tipoEsperado(lex){
+    tipoEsperado(tipoEsperado){
 
         const token=this.siguienteEnLaLista();
-        if(!token || token.tipo!==lex){
-            this.throwError(`Se esperaba '${lex}'`, token);
+        if(!token || token.tipo!==tipoEsperado){
+            this.throwError(`Se esperaba '${tipoEsperado}'`, token);
 
         }
         return token;
@@ -68,9 +68,9 @@ export class TokenStream{
 
     //Para palabras reservadas:
 
-    palabraReservadaEsperadad(PReser){
+    palabraReservadaEsperada(PReser){
 
-        return this.LexemaEsperado(PReser);
+        return this.lexemaEsperado(PReser);
     }
 
     throwError(msg,token){
