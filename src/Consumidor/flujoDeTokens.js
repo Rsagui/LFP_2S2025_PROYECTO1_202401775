@@ -30,5 +30,58 @@ export class TokenStream{
     //ver si ya terminamos:
     seraQueTerminamosLaLista(){return this.idx>=this.listaDeTokens.length;}
 
+    LexemaEsperado(lex){
+
+        const token=this.siguienteEnLaLista();//consumo pero devuelve el token actual en donde me encontraba 
+        if(!token || token.lexema!==lex){ //atributo lexema de un token
+            this.throwError(`Se esperaba '${lex}'`, token);
+        }
+        return token;
+
+    }
+
+    // es un atributo
+    tipoEsperado(lex){
+
+        const token=this.siguienteEnLaLista();
+        if(!token || token.tipo!==lex){
+            this.throwError(`Se esperaba '${lex}'`, token);
+
+        }
+        return token;
+
+    }
+
+    //Yo considero a los atributos lexemas al final de cuentas
+    atributoEsperado(nombreAtributo){
+
+        const token=this.siguienteEnLaLista();
+
+        if(!token|| token.lexema!==nombreAtributo){
+
+            this.throwError(`Se esperaba atributo '${nombreAtributo}'`, token);
+
+        }
+        return token;
+
+    }
+
+    //Para palabras reservadas:
+
+    palabraReservadaEsperadad(PReser){
+
+        return this.LexemaEsperado(PReser);
+    }
+
+    throwError(msg,token){
+
+        //Si existe el token no esta vacio y no e cumple los estandares esperados
+        //Caemos en este metodo, donde se accede al token,su fila, su lexema  y lo del jason me permite que sea visto en consola de forma amena, con comillas detro
+        //Si el token esta vacio, esta variable estara vacia
+        const dondeFueElError=token? ` (línea ${token.fila}, columna ${token.columna}, lexema=${JSON.stringify(token.lexema)})` : "";
+
+        throw new Error(`${msg}${dondeFueElError}`);
+    }
+
 }
 
