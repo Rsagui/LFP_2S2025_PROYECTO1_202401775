@@ -1,0 +1,54 @@
+:root{
+  --bg:#0b1220;           /* azul muy oscuro */
+  --card:#111827;         /* gris azulado */
+  --ink:#e5e7eb;          /* blanco suave */
+  --muted:#9ca3af;        /* gris */
+  --accent:#f59e0b;       /* amarillo */
+  --accent-2:#ef4444;     /* rojo the batman */
+  --line:#1f2937;         /* bordes */
+  --btn:#1d4ed8;          /* azul botón */
+  --btn-hover:#2563eb;
+  --maxw: 980px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:linear-gradient(180deg,#0a0f1a,#0b1220 60%,#0b0b0b);
+  color:var(--ink); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:24px}
+
+header h1{margin:0 0 6px; font-size:32px; letter-spacing:.5px}
+.muted{color:var(--muted)}
+
+.actions{display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 18px}
+.btn{
+  background:var(--btn); color:white; border:none; border-radius:10px;
+  padding:10px 14px; cursor:pointer; transition:.2s transform,.2s background;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+.btn:hover{background:var(--btn-hover); transform:translateY(-1px)}
+.btn.primary{background:var(--accent); color:#1b1b1b}
+.btn.primary:hover{background:#fbbf24}
+.btn.danger{background:var(--accent-2)}
+.btn.small{padding:6px 10px; font-size:14px}
+
+.panel{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 4px 20px rgba(0,0,0,.35);
+}
+.panel-head{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 16px; border-bottom:1px solid var(--line)
+}
+.panel h2{margin:0; font-size:18px}
+textarea#vistaArchivo{
+  width:100%; min-height:300px; resize:vertical; padding:16px;
+  background:#0a0f1a; color:var(--ink); border:none; outline:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14px;
+}
+table{width:100%; border-collapse:collapse; background:#0a0f1a; color:var(--ink)}
+th,td{border:1px solid var(--line); padding:10px; vertical-align:top}
+th{background:#1f2937}
+.badge{display:inline-block; padding:2px 8px; border-radius:8px; background:#312e81}

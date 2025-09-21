@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador de torneoss</title>
+    <link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+    
+   <header class="wrap">  
+    <h1> Analizador de torneos</h1>
+    <p class="muted">Carga un archivo .txt y genera reportes</p>
+   </header> 
+
+    <main class="wrap">
+       <div class="actions">
+       
+            <button id="btnCargar" class="btn primary">Cargar Archivo</button>
+            <button id="btnAnalizar" class="btn">Analizar archivo</button>
+            <button id="btnBracket" class="btn">Reporte de bracket</button>
+            <button id="btnEquipos" class="btn">Reporte estadisticas por equipo</button>
+            <button id="btnGoleadores" class="btn">Reporte Goleadores</button>
+            <button id="btnInfo" class="btn">Reporte info general torneo</button>
+            <button id="btnGraficar" class="btn">Graficar brackets</button>
+       </div> 
+
+       <section class="panel">
+        <div class="panel-head">
+            <h2> Contenido del archivo</h2>
+            <button id="btnBorrar" class="btn danger small">Borrar</button>
+        </div>
+        <textarea id="vistaArchivo" readonly placeholder="No hay archivo cargado…"></textarea>
+       </section>
+
+
+    </main>   
+
+    <script type="module" src="./js/common.js"></script>
+</body>
+</html>

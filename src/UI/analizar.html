@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css"/>
+    <title>Tokens y errores</title>
+</head>
+<body>
+    
+    <main class="wrap">
+
+        <h1>Tokens y Errores</h1>
+        <div class="actions">
+            <button id="btnDescargar" class="btn primary">Descargar el html </button>
+        </div>
+        
+        <h2>Tokens encontrados</h2>
+
+        <table id="tablaTokens">
+            <thead>
+                <tr>
+                   <th>#</th>
+                   <th>lexema</th> 
+                   <th>tipo</th> 
+                   <th>fila</th> 
+                   <th>columna</th>  
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Errores encontrados</h2>
+
+        <table id="tablaErrores">
+            <thead>
+                <tr>
+                   <th>#</th>
+                   <th>lexema</th> 
+                   <th>tipo</th>
+                   <th>descripción</th>  
+                   <th>fila</th> 
+                   <th>columna</th>  
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main> 
+    <script type="module" src="./js/analyze.js"></script>
+</body>
+</html>
