@@ -35,7 +35,7 @@ export function consumirBloqueTorneo(TStream){
         else if(token.lexema==="equipos"){
             TStream.atributoEsperado("equipos");//en este casp si consumo y paso al siguiente
             TStream.lexemaEsperado(":");
-            equiposEsperados=TStream.tipoEsperado("Numero").lexema; //el token que me es debuelto,lo uso para acceder a numero
+            equiposEsperados=TStream.tipoEsperado("Número").lexema; //el token que me es devuelto,lo uso para acceder a numero
         }
 
         else if(token.lexema==="sede"){

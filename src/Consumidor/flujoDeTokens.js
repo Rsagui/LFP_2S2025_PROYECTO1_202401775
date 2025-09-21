@@ -8,7 +8,7 @@ Este es un flujo seguro para iterar tokens y terminar sus validaciones para los 
 
 */
 
-import {Equipo} from "../Modelos/Equipo";
+
 //demas imports
 
 export class TokenStream{
@@ -25,7 +25,7 @@ export class TokenStream{
     
     //ahora esto si sirve para consumir y avanzar:
 
-    siguienteEnLaLista(){return this.listaDeTokens[idx++]||null;} //devuvo el token actual y despues incremeto el idx uno más
+    siguienteEnLaLista(){return this.listaDeTokens[this.idx++]||null;} //devuvo el token actual y despues incremeto el idx uno más
 
     //ver si ya terminamos:
     seraQueTerminamosLaLista(){return this.idx>=this.listaDeTokens.length;}
