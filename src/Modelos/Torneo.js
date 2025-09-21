@@ -64,7 +64,7 @@ export class Torneo{
         }
 
         //Estoy recorriendo una lista de objetos gol
-        for(infoGol in partido.ingoGoles){
+        for(const infoGol in partido.infoGoles){
 
             //si es cierto la comparacion, el equipo es igual al equipo 2 y si no, entonce igual al equi´po
             const equipoGol=(infoGol.equipoDelJugador===equi1.nombreEquipo)? equi1: equi2;

@@ -94,7 +94,7 @@ export function consumirListaJugadores(TStream,equipo){
 
 //funciones de apoyo para el parseo de los jugadores
 
-function consumirCadena(TStream,atributoAEvaluar){
+export function consumirCadena(TStream,atributoAEvaluar){
 
     TStream.atributoEsperado(atributoAEvaluar); //si no pasa nada solo se consume y pasamos al next
 
@@ -104,7 +104,7 @@ function consumirCadena(TStream,atributoAEvaluar){
 }
 
 //el numero a evaluar puede ser un dorsal o una edads
-function consumirNumero(TStream,numeroAEvaluar){
+export function consumirNumero(TStream,numeroAEvaluar){
 
     TStream.atributoEsperado(numeroAEvaluar); //si el atributo  esperado "el que pase como argumento" coincide con el lexema del token, se consume y vamos la siguiente
 
