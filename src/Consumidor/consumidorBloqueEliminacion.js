@@ -1,7 +1,7 @@
 // ------------- ELIMINACION { fases: [ partidos ] ... } --------------------
-import {Partido} from "../Modelos/Partido"
-import { consumirBloqueEquipos, consumirNumero } from "./consumidorBloqueEquipos";
-import {Gol} from "../Modelos/Gol"
+import {Partido} from "../Modelos/Partido.js"
+import { consumirBloqueEquipos, consumirNumero } from "./consumidorBloqueEquipos.js";
+import {Gol} from "../Modelos/Gol.js"
 
 //TStream es un onjeto flujo de tokes y torneo es un objeto torneo
 export function consumirBloqueEliminacion(TStream,torneo){
@@ -20,7 +20,7 @@ export function consumirBloqueEliminacion(TStream,torneo){
 
             //ahora sigue la laista de partidos:
 
-            consumirBloqueEquipos(TStream,torneo,fase);
+            consumirListaDePartidos(TStream,torneo,fase);
             TStream.lexemaEsperado("]")
 
             //aca se consumen las comas que separan las fases:
@@ -43,9 +43,9 @@ export function consumirBloqueEliminacion(TStream,torneo){
 
 
 //TStream=flujoDeTokens y torneo son objetos, fase es una variable que me servira para la construccion de otro objeto
-function cosumirListaDePartidos(TStream,torneo,fase){
+function consumirListaDePartidos(TStream,torneo,fase){
 
-    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista()!=="]"){
+    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista().lexema!=="]"){
 
         TStream.palabraReservadaEsperada("partido");//se consume el token y se avanza
         TStream.lexemaEsperado(":");
@@ -62,7 +62,7 @@ function cosumirListaDePartidos(TStream,torneo,fase){
         TStream.palabraReservadaEsperada("resultado");
         TStream.lexemaEsperado(":");
         //En mi lexeer yo creaba objetos tokens con la posibilidad de tener como tipo de lexema:marcador
-        marcador=TStream.tipoEsperado("Marcador").lexema;
+        const marcador=TStream.tipoEsperado("Marcador").lexema;
 
         //marcador con goles de cada equipo:
         //separo por el guion, llano n a esos datos ailasdos y los mapeo esos datos aislados. Y lo guardo en esta variable tipo lista de tamaño 2
@@ -112,7 +112,7 @@ function cosumirListaDePartidos(TStream,torneo,fase){
 function consumidorDeBloqueGoleadores(TStream,equi1,equi2){
     const goles=[];
 
-    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista().lexema!=="]");{
+    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista().lexema!=="]"){
         TStream.palabraReservadaEsperada("goleador");
         TStream.lexemaEsperado(":");
         //tomamos el lexema si el tipo del token en donde estamos es una cadena

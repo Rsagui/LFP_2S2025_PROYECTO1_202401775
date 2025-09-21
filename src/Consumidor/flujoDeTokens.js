@@ -74,7 +74,7 @@ export class TokenStream{
     }
 
     throwError(msg,token){
-
+        if (typeof msg !== "string") msg = String(msg);
         //Si existe el token no esta vacio y no e cumple los estandares esperados
         //Caemos en este metodo, donde se accede al token,su fila, su lexema  y lo del jason me permite que sea visto en consola de forma amena, con comillas detro
         //Si el token esta vacio, esta variable estara vacia

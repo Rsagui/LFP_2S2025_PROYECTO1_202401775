@@ -1,4 +1,4 @@
-import { Lexer } from "../EstucturaDeScanner/lexer.js";
+import { Lexer } from "../EstructuraDeScanner/lexer.js";
 import { readFileSync } from "fs";
 
 

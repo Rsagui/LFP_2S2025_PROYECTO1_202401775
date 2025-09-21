@@ -9,7 +9,7 @@ export class Partido{
 
         this.fase=fase;
         this.equipoLocal=equipoLocal;
-        this.equipoLocal=equipoVisitante;
+        this.equipoVisitante=equipoVisitante;
         this.golesEquipoLocal=Number(golesEquipoLocal);
         this.golesEquipoVisitante=Number(golesEquipoVisitante);
         this.infoGoles=[];//una lista que almcaena objetos gol
@@ -17,7 +17,7 @@ export class Partido{
     }
 
     agregarInfoGol(infoGol){ //aca se mete un objeto gol
-        this.agregarInfoGol.push(infoGol);
+        this.infoGoles.push(infoGol);
 
     }
 

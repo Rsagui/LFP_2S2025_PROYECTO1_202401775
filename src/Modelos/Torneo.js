@@ -1,3 +1,5 @@
+import { Equipo } from "./Equipo.js";
+
 export class Torneo{
     constructor(nombreTorneo,sede,cantEquiposEsperados){
 
@@ -27,7 +29,7 @@ export class Torneo{
         if(!this.equiposDelTorneo.has(nombreDelEquipoABuscar)){
 
             //Si no existe un equipo, lo creamos y si no, nosotros no permitimos que exista duplicadoss
-            this.equiposDelTorneo.set(nombre, new Equipo(nombreDelEquipoABuscar));
+            this.equiposDelTorneo.set(nombreDelEquipoABuscar, new Equipo(nombreDelEquipoABuscar));
 
         }
         
@@ -49,13 +51,13 @@ export class Torneo{
         equi1.cantPartidosJugados++; equi2.cantPartidosJugados++;
 
         //estadisticas iniciales equipo local
-        equi1.golesAFavor=partido.golesEquipoLocal;
-        equi1.golesEnContra=partido.golesEquipoVisitante; 
+        equi1.golesAFavor+=partido.golesEquipoLocal;
+        equi1.golesEnContra+=partido.golesEquipoVisitante; 
 
         //estadisticas iniciales equipo visitante
 
-        equi2.golesAFavor=partido.golesEquipoVisitante;
-        equi2.golesEnContra=partido.golesEquipoLocal;
+        equi2.golesAFavor+=partido.golesEquipoVisitante;
+        equi2.golesEnContra+=partido.golesEquipoLocal;
 
         //establece las victorias:
         if(equi1.golesAFavor>equi2.golesAFavor) equi1.victorias++;
@@ -64,7 +66,7 @@ export class Torneo{
         }
 
         //Estoy recorriendo una lista de objetos gol
-        for(const infoGol in partido.infoGoles){
+        for(const infoGol of partido.infoGoles){
 
             //si es cierto la comparacion, el equipo es igual al equipo 2 y si no, entonce igual al equi´po
             const equipoGol=(infoGol.equipoDelJugador===equi1.nombreEquipo)? equi1: equi2;

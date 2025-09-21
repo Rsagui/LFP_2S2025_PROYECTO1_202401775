@@ -1,7 +1,7 @@
 // ---------- TORNEO { nombre: "str", equipos: num, sede: "str" } -----------
 //TStream=onjeto flujo de tokens
 
-import { TokenStream } from "./flujoDeTokens";
+
 
 export function consumirBloqueTorneo(TStream){
 

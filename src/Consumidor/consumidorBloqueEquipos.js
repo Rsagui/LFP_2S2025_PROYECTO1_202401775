@@ -1,8 +1,8 @@
 // -------- EQUIPOS { (equipo: "Nombre" [ jugadores... ]) , ... } ----------
 
-import { Equipo } from "../Modelos/Equipo";
-import { Jugador } from "../Modelos/Jugador";
-import { TokenStream } from "./flujoDeTokens";
+
+import { Jugador } from "../Modelos/Jugador.js";
+
 
 
 //Este recibe un objeto torneo y uno de flujo de tokens
@@ -11,9 +11,9 @@ export function consumirBloqueEquipos(TStream,torneo){
     
     //repetimos hasta encontrar la lla ve de cierre
     //acordate que el metodo ver,no consume, solo mira que sigue
-    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista()!=="}"){
+    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista()?.lexema!=="}"){
 
-        const token=TStream.verQueHayEnlaLista();
+        const token=TStream.verQueHayEnLaLista();
 
         //si lo que sigue tiene xomo lexema equipo
 
@@ -35,22 +35,22 @@ export function consumirBloqueEquipos(TStream,torneo){
             //si revisas lo archivos de entrada, entre casa equipo existen comas
 
             //Entonces eso lo consumimos
-            if(TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista.lexema===",") TStream.siguietneEnLaLista();
+            if(TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista().lexema===",") TStream.siguienteEnLaLista();
 
             //caso en donde literalmente no existe siguiente, pero estamos en la posicion donde este la coma          
         }
         else if(token.lexema===","){
-            TStream.siguietneEnLaLista(); //DE Todas formas es consumido
+            TStream.siguienteEnLaLista(); //DE Todas formas es consumido
             }
         //caso donde no se cumole elformato
         else{
-            TStream.throwError(("Se esperaba 'equipo' o '}' en EQUIPOS", token));
+            TStream.throwError("Se esperaba 'equipo' o '}' en EQUIPOS", token);
             }
     }
 
     if(torneo.equiposDelTorneo.size!==torneo.cantEquiposEsperados){
         //señal de falta de coherencia
-        console.warn(`Advertencia: se declararon ${torneo.equipos.size} equipos, se esperaban ${torneo.esperadoEquipos}.`);
+        console.warn(`Advertencia: se declararon ${torneo.equiposDelTorneo.size} equipos, se esperaban ${torneo.cantEquiposEsperados}.`);
     }
 }
 
@@ -58,13 +58,13 @@ export function consumirBloqueEquipos(TStream,torneo){
 
 export function consumirListaJugadores(TStream,equipo){
 
-    while(TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista().lexema!=="]"){
+    while(!TStream.seraQueTerminamosLaLista() && TStream.verQueHayEnLaLista().lexema!=="]"){
         //Todo esto sigue la forma del archivo de texto
         TStream.palabraReservadaEsperada("jugador"); //si coincide con el lexema del token, seguimos
         TStream .lexemaEsperado(":");
         
         //si el tipo del token es una cadena, me devuelve le token y accedo a su lexema para tener su nombre
-        const nombreEquipo = TStream.expectType("Cadena").lexema;
+        const nombreJugador = TStream.tipoEsperado("Cadena").lexema;
 
 
         TStream.lexemaEsperado("[");
@@ -88,7 +88,7 @@ export function consumirListaJugadores(TStream,equipo){
         equipo.agregarUnJugadorAlEquipo(new Jugador(nombreJugador,posicionDelJugador,numeroDelJugador,edad));
 
         //entre cada info de los jugadores hay comas que seperan:
-        if(TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista().lexema===",") TStream.siguietneEnLaLista();
+        if(TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista().lexema===",") TStream.siguienteEnLaLista();
     }
 }
 
