@@ -62,11 +62,28 @@ function consumirListaDePartidos(TStream,torneo,fase){
         TStream.palabraReservadaEsperada("resultado");
         TStream.lexemaEsperado(":");
         //En mi lexeer yo creaba objetos tokens con la posibilidad de tener como tipo de lexema:marcador
-        const marcador=TStream.tipoEsperado("Marcador").lexema;
+        //hay que tomar en cuenta que el marcador puede ser 3-2, pendiente o empate
+        //un resultado empate lo desarollaremos desúes
 
-        //marcador con goles de cada equipo:
-        //separo por el guion, llano n a esos datos ailasdos y los mapeo esos datos aislados. Y lo guardo en esta variable tipo lista de tamaño 2
-        const [golesE1,golesE2]=marcador.split("-").map(n=>Number(n));
+        let golesE1=null,golesE2=null,esPendiente=false;
+
+        const TRes=TStream.verQueHayEnLaLista();
+
+        //caso donde si exista un marcador
+        if(TRes && TRes.tipo==="Marcador"){
+
+            const marcador = TStream.tipoEsperado("Marcador").lexema;
+            [golesE1, golesE2] = marcador.split("-").map(n => Number(n));
+        }
+
+        else if(TRes && TRes.tipo==="Cadena" && TRes.lexema==="Pendiente"){
+            TStream.tipoEsperado("Cadena"); // consume "Pendiente"
+            esPendiente=true;
+        }
+        
+        else{
+            TStream.throwError('Se esperaba Marcador o "Pendiente',TRes)
+        }
 
 
         //ahora en el parseo toca los registros de gol:
@@ -74,8 +91,9 @@ function consumirListaDePartidos(TStream,torneo,fase){
         let goles=[];
 
         //esto es propio del bloque que es sobre los goleadores
-        //lo que separa los goleadores de los resultados, es una coma
-        if(TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista().lexema===","){
+        //lo que separa los goleadores de los resultados, es una coma.
+        //Pero si es penddiente no va a existir.
+        if(!esPendiente && TStream.verQueHayEnLaLista() && TStream.verQueHayEnLaLista().lexema===","){
             TStream.siguienteEnLaLista();//consumo la coma despues del resultado
             TStream.palabraReservadaEsperada("goleadores");//se consume el token y avanzo
             TStream.lexemaEsperado(":");
@@ -97,7 +115,7 @@ function consumirListaDePartidos(TStream,torneo,fase){
 
         //Se registra un partido
         const partidoNuevo=new Partido(fase, equi1,equi2,golesE1,golesE2);
-        
+        partidoNuevo.pendiente=esPendiente;
         //los partidos tienen un atributo que es una lista para guardar info de goles
 
         //Entonces voy a iterar sobre la lista que hice

@@ -14,6 +14,8 @@ export class Partido{
         this.golesEquipoVisitante=Number(golesEquipoVisitante);
         this.infoGoles=[];//una lista que almcaena objetos gol
         //Los objetos gol me dicen->el que marco "jugador", su equipo y el minuto
+    
+        this.pendiente=false //pueden haber partidos por jugar
     }
 
     agregarInfoGol(infoGol){ //aca se mete un objeto gol
