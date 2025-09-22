@@ -130,3 +130,28 @@ export function capitalizar(cadenaDeFase){
     return cadenaDeFase? cadenaDeFase.charAt(0).toUpperCase()+cadenaDeFase.slice(1): cadenaDeFase;
 
 }
+
+function normalizaFase(fase) {
+  return (fase || "").toLowerCase();
+}
+
+function faseSiguiente(fase) {
+  switch (normalizaFase(fase)) {
+    case "cuartos": return "Semifinal";
+    case "semifinal": return "Final";
+    case "final": return "Campeón"; // opcional
+    default: return "-";
+  }
+}
+
+function actualizarFaseAlcanzada(equipo, fase, gano) {
+  if (!equipo) return;
+  if (gano) {
+    equipo.faseAlcanzada = faseSiguiente(fase);
+  } else {
+    // solo marca la fase actual si no se le había asignado algo mayor
+    if (!equipo.faseAlcanzada) {
+      equipo.faseAlcanzada = capitalizar(fase);
+    }
+  }
+}
