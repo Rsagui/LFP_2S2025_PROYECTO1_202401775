@@ -4,8 +4,9 @@ const tb = document.querySelector("#tb tbody");
 
 // lista [ { jugador, equipo, goles, minutos[] } ]
 const lista = [];
+//el entries es un iterador que para cada objeto equipo,guardo su nombre y el mismo objeto equipo
 for (const [nom, eq] of torneo.equiposDelTorneo.entries()){
-  for (const j of eq.jugadoresDelEquipo){
+  for (const j of eq.jugadoresDelEquipo){ //sobre cada equipo itero sobre sus jugadores
     if ((j.cantidadGoles||0) > 0){
       lista.push({ jugador:j.nombre, equipo:nom, goles:j.cantidadGoles, minutos:(j.minutosDeGol||[]) });
     }
