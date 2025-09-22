@@ -85,7 +85,7 @@ if(textArea){
 }
 
 //Navegacion para los reporte
-function go(pagina){window.open(`../ui/${pagina}`, "_blank")} //el argumento blank es para que se abra en una pagina en blanco
+function go(pagina){window.open(`../UI/${pagina}`, "_blank")} //el argumento blank es para que se abra en una pagina en blanco
 
 //acciones de botoens
 
