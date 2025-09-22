@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bracket de eliminación</title>
+  <link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Bracket de eliminación</h1>
+    <div class="actions">
+      <button id="btnDescargar" class="btn primary">Descargar HTML</button>
+    </div>
+
+    <table id="tbBrackets">
+      <thead>
+        <tr>
+          <th>Fase</th>
+          <th>Partido</th>
+          <th>Resultado</th>
+          <th>Ganador</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <!-- cache-buster para que NO use la versión guardada -->
+  <script type="module" src="./js/bracket.js?v=3"></script>
+</body>
+</html>

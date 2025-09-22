@@ -123,7 +123,7 @@ export class Torneo{
 }
 
 //la entradaa deben se ser cadenas que signifiquen una fase de eliminacion que llego algun equipo
-function capitalizar(cadenaDeFase){
+export function capitalizar(cadenaDeFase){
 
     //si tiene contenido dentro la cadena fase, tenemos 2 opciones
     //1) separar la primer letra, volverla mayucula y concatenar con lo restante de la cadena y enviar la cadenaFase vacia

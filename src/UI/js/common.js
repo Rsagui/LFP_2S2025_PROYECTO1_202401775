@@ -85,7 +85,7 @@ if(textArea){
 }
 
 //Navegacion para los reporte
-function go(pagina){window.open(`../UI/${pagina}`, "_blank")} //el argumento blank es para que se abra en una pagina en blanco
+function go(pagina){window.open(`../ui/${pagina}`, "_blank")} //el argumento blank es para que se abra en una pagina en blanco
 
 //acciones de botoens
 
@@ -102,18 +102,14 @@ export function obtenerTokensYErrores(texto){
 
 }
 
-export function obtenerTorneo(texto) {
-    // 1) Lexer: devuelve tokens y errores
-    const { tokens, errores } = analizarEntradaDeTexto(texto);
-
-    // 2) Intentar parsear torneo aunque existan errores léxicos
-    let torneo = null;
-    try {
-        torneo = conjuntoDeConsumidores(tokens);
-    } catch (e) {
-        console.error("Error sintáctico/semántico al parsear:", e.message);
-    }
-
-    // 3) Retornar siempre ambos
-    return { torneo, errores };
+export function obtenerTorneo(texto){
+  const { tokens, errores } = obtenerTokensYErrores(texto);
+  let torneo = null;
+  let parseError = null;
+  try {
+    torneo = conjuntoDeConsumidores(tokens); // orquestador TORNEO->EQUIPOS->ELIMINACION
+  } catch (e) {
+    parseError = e instanceof Error ? e.message : String(e);
+  }
+  return { errores, torneo, parseError };
 }
